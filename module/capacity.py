@@ -5,7 +5,13 @@ import oci
 from modules.utils import yellow,red, print_error
 from modules.identity import get_availability_domains, get_fault_domains, get_compartment_name
 from modules.exceptions import RestartFlowException 
+import pandas as pd
+from datetime import datetime
 
+# Get the current timestamp in required format
+timestamp = datetime.now().strftime('%Y%b%d_%H%M%S')
+timestamp=timestamp+'.csv'
+# print("Current Timestamp:", timestamp)
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Request user to set an oCPU value
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -386,7 +392,11 @@ def create_and_print_report(region, identity_client, core_client, availability_d
 
     try:
         report = core_client.create_compute_capacity_report(create_compute_capacity_report_details=report_details)
-
+        # print('type of report.data.shape_availabilities')
+        # print(type(report.data.shape_availabilities))
+        # if len(report.data.shape_availabilities)>0:
+        #     df_computeavailability=pd.DataFrame(report.data.shape_availabilities)
+        #     df_computeavailability.to_csv(timestamp,index=False)
         # Step 3: Print capacity results
         for result in report.data.shape_availabilities:
             available_count = f"{result.available_count:^16}" if result.available_count else f"{'-':^16}"
